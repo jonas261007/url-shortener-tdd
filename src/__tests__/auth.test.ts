@@ -14,8 +14,9 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // Limpa a tabela de usuários antes de cada teste
-  await dataSource.getRepository('User').clear();
+  // Limpar apenas tabelas existentes
+  await dataSource.getRepository('Link').clear();  // se Link existir
+  await dataSource.getRepository('User').clear();  // User existe
 });
 
 describe('AuthController', () => {
