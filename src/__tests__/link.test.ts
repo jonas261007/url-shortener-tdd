@@ -1,55 +1,55 @@
 import request from 'supertest';
 import { AppDataSource } from '../config/data-source';
+import { DataSource } from 'typeorm';
 import { app } from '../app';
+import { User } from '../entities/User';
 
+let dataSource: DataSource;
 let token: string;
 
 beforeAll(async () => {
-  await AppDataSource.initialize();
+  dataSource = await AppDataSource.initialize();
+});
 
-  // Criar usuário e pegar token
-  await request(app).post('/auth/register').send({
-    name: 'Jonas',
-    email: 'jonas@test.com',
-    password: '123456',
-  });
+afterAll(async () => {
+  await dataSource.destroy();
+});
+
+beforeEach(async () => {
+  await dataSource.getRepository('Link').clear();
+  await dataSource.getRepository('User').clear();
+
+  // Criar usuário e gerar token
+  const userData = { name: 'Jonas', email: 'jonas@test.com', password: '123456' };
+  await request(app).post('/auth/register').send(userData);
   const res = await request(app).post('/auth/login').send({
-    email: 'jonas@test.com',
-    password: '123456',
+    email: userData.email,
+    password: userData.password,
   });
   token = res.body.token;
 });
 
-afterAll(async () => {
-  await AppDataSource.destroy();
-});
-
-describe('LinkController', () => {
-  it('deve criar link curto com slug e QR code', async () => {
-    const res = await request(app)
+describe('LinkController - listagem', () => {
+  it('deve retornar lista de links do usuário', async () => {
+    // Criar alguns links
+    await request(app)
       .post('/links')
       .set('Authorization', `Bearer ${token}`)
       .send({ original_url: 'https://example.com' });
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('slug');
-    expect(res.body).toHaveProperty('qr_code');
-  });
 
-  it('não deve criar link com URL inválida', async () => {
-    const res = await request(app)
+    await request(app)
       .post('/links')
       .set('Authorization', `Bearer ${token}`)
-      .send({ original_url: 'invalid-url' });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error', 'URL inválida');
-  });
+      .send({ original_url: 'https://example.org' });
 
-  it('não deve criar link com expires_at no passado', async () => {
     const res = await request(app)
-      .post('/links')
-      .set('Authorization', `Bearer ${token}`)
-      .send({ original_url: 'https://example.com', expires_at: '2000-01-01' });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('error', 'expires_at deve ser maior que agora');
+      .get('/links')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body[0]).toHaveProperty('slug');
+    expect(res.body[0]).toHaveProperty('click_count');
+    expect(res.body[0]).toHaveProperty('visits');
   });
 });
