@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   BaseEntity,
 } from 'typeorm';
 import { User } from './User';
+import { Visit } from './Visit';
 
 export type LinkStatus = 'active' | 'expired' | 'inactive';
 
@@ -16,7 +18,7 @@ export class Link extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, user => user.links)
   user!: User;
 
   @Column()
@@ -37,9 +39,12 @@ export class Link extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   click_count!: number;
 
-  @CreateDateColumn()
+  @OneToMany(() => Visit, visit => visit.link)
+  visits!: Visit[];
+
+  @CreateDateColumn({ type: 'datetime' })
   created_at!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'datetime' })
   updated_at!: Date;
 }

@@ -37,4 +37,10 @@ export class LinkController {
       expires_at: link.expires_at,
     });
   }
+
+  static async list(req: Request, res: Response) {
+    const userId = (req as any).userId;
+    const links = await Link.find({ where: { user: { id: userId } } });
+    return res.json(links);
+  }
 }

@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
   BaseEntity,
 } from 'typeorm';
+import { Link } from './Link';
 
 @Entity()
 export class User extends BaseEntity {
@@ -21,9 +23,12 @@ export class User extends BaseEntity {
   @Column()
   password_hash!: string;
 
-  @CreateDateColumn()
+  @OneToMany(() => Link, link => link.user)
+  links!: Link[];
+
+  @CreateDateColumn({ type: 'datetime' })
   created_at!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'datetime' })
   updated_at!: Date;
 }

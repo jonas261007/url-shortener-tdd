@@ -22,6 +22,6 @@ export class Visit extends BaseEntity {
   @Column()
   user_agent!: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'datetime' })
   created_at!: Date;
 }
