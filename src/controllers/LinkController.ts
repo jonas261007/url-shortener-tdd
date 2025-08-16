@@ -24,7 +24,6 @@ export class LinkController {
     const slug = nanoid(8);
     const link = Link.create({ user, original_url, slug, expires_at });
 
-    // Gerar QR Code
     link.qr_code = await QRCode.toDataURL(`${req.protocol}://${req.get('host')}/s/${slug}`);
 
     await link.save();

@@ -45,7 +45,6 @@ export class AuthController {
   }
 
   static async logout(_req: Request, res: Response) {
-    // Logout simples (JWT stateless) → client remove token
     res.json({ message: 'Logout efetuado' });
   }
 }
