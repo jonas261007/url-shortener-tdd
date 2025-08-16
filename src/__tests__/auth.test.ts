@@ -14,9 +14,8 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // Limpar apenas tabelas existentes
-  await dataSource.getRepository('Link').clear();  // se Link existir
-  await dataSource.getRepository('User').clear();  // User existe
+  await dataSource.getRepository('Link').clear();
+  await dataSource.getRepository('User').clear();
 });
 
 describe('AuthController', () => {

@@ -1,7 +1,6 @@
-// src/__tests__/redirect.test.ts
 import request from 'supertest';
-import { app } from '../app'; // corrigido do default export
-import { AppDataSource } from '../config/data-source'; // ajuste de caminho
+import { app } from '../app';
+import { AppDataSource } from '../config/data-source';
 import { User } from '../entities/User';
 import { Link } from '../entities/Link';
 
@@ -11,11 +10,9 @@ let token: string;
 beforeAll(async () => {
   await AppDataSource.initialize();
 
-  // Limpa tabelas para evitar conflito de UNIQUE
   await Link.clear();
   await User.clear();
 
-  // Cria usuário com email aleatório
   const randomEmail = `redirect_${Date.now()}@test.com`;
   user = User.create({
     name: 'Teste Redirect',
@@ -24,7 +21,6 @@ beforeAll(async () => {
   });
   await user.save();
 
-  // Aqui você precisaria gerar token JWT se o teste depender dele
   token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExNiwiaWF0IjoxNzU1MjY0NTM4LCJleHAiOjE3NTUzNTA5Mzh9.rlWhrnc9AL1mZv9KbTpifPBelLD-pbrAVonBQz_s7lc'; 
 });
 
@@ -37,7 +33,7 @@ describe('RedirectController', () => {
     const link = Link.create({
       user,
       original_url: 'https://example.com',
-      slug: `teste_${Date.now()}`, // slug aleatório
+      slug: `teste_${Date.now()}`,
       status: 'active',
     });
     await link.save();
@@ -52,9 +48,9 @@ describe('RedirectController', () => {
     const expiredLink = Link.create({
       user,
       original_url: 'https://example.com',
-      slug: `expirado_${Date.now()}`, // slug aleatório
+      slug: `expirado_${Date.now()}`,
       status: 'active',
-      expires_at: new Date(Date.now() - 1000), // passado
+      expires_at: new Date(Date.now() - 1000),
     });
     await expiredLink.save();
 

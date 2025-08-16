@@ -19,7 +19,6 @@ beforeEach(async () => {
   await dataSource.getRepository('Link').clear();
   await dataSource.getRepository('User').clear();
 
-  // Criar usuário e gerar token
   const userData = { name: 'Jonas', email: 'jonas@test.com', password: '123456' };
   await request(app).post('/auth/register').send(userData);
   const res = await request(app).post('/auth/login').send({
@@ -31,7 +30,6 @@ beforeEach(async () => {
 
 describe('LinkController - listagem', () => {
   it('deve retornar lista de links do usuário', async () => {
-    // Criar alguns links
     await request(app)
       .post('/links')
       .set('Authorization', `Bearer ${token}`)
