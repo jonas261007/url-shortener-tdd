@@ -1,13 +1,6 @@
-// src/app.ts
-import 'reflect-metadata';
 import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import routes from './routes';
-
-dotenv.config();
+import router from './routes';
 
 export const app = express();
-app.use(cors());
 app.use(express.json());
-app.use(routes);
+app.use(router);
