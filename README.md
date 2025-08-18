@@ -1,7 +1,5 @@
 # 🔗 URL Shortener TDD
 
-![CI](https://github.com/seu-usuario/url-shortener-tdd/actions/workflows/test.yml/badge.svg)
-
 Encurtador de URLs com autenticação, geração de QR Code, redirecionamento seguro e dashboard de métricas, desenvolvido com **Node.js, Express, TypeORM, PostgreSQL e Jest (TDD)**.
 
 ---
