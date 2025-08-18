@@ -1,5 +1,7 @@
 # 🔗 URL Shortener TDD
 
+![CI](https://github.com/seu-usuario/url-shortener-tdd/actions/workflows/test.yml/badge.svg)
+
 Encurtador de URLs com autenticação, geração de QR Code, redirecionamento seguro e dashboard de métricas, desenvolvido com **Node.js, Express, TypeORM, PostgreSQL e Jest (TDD)**.
 
 ---
@@ -33,6 +35,7 @@ Encurtador de URLs com autenticação, geração de QR Code, redirecionamento se
 ## ⚙️ Instalação
 
 Clone o repositório:
+
 ```bash
 git clone https://github.com/seu-usuario/url-shortener-tdd.git
 cd url-shortener-tdd
@@ -135,32 +138,58 @@ npm test -- --coverage
 
 ---
 
-## 📸 Prints
-
-(Adicionar imagens ou GIFs do fluxo: **login → criar link → acessar slug → dashboard**)
-
----
-
-## 🤝 Contribuição
+## 🤝 Boas Práticas para Contribuição
 
 1. Faça um fork do projeto
-2. Crie uma branch: `git checkout -b minha-feature`
-3. Commit suas mudanças: `git commit -m "feat: minha feature"`
-4. Push: `git push origin minha-feature`
-5. Abra um Pull Request
+2. Crie uma branch específica para sua feature:
+
+```bash
+git checkout -b minha-feature
+```
+
+3. Commit suas mudanças:
+
+```bash
+git commit -m "feat: minha feature"
+```
+
+4. Push da branch:
+
+```bash
+git push origin minha-feature
+```
+
+5. Abra um Pull Request no repositório principal
+
+**Dica:** Crie um PR por feature, organize commits e anexe prints ou GIFs para evidenciar a funcionalidade.
 
 ---
 
-## 📄 Licença
+## 🧪 Testes Automatizados
 
-MIT
+### Saída dos testes 1
+![Testes 1](./prints/capture_250817_122847.png)
 
-```
+### Saída dos testes 2
+![Testes 2](./prints/2.png)
+
+### Saída dos testes 3
+![Testes 3](./prints/capture_250814_133731.png)
+
+### Saída dos testes 4
+![Testes 4](./prints/capture_250814_133818.png)
+
+### Saída dos testes 5
+![Testes 5](./prints/capture_250814_163752.png)
+
+### Saída dos testes 6
+![Testes 6](./prints/capture_250815_094253.png)
+
+### Saída dos testes 7
+![Testes 7](./prints/capture_250815_101449.png)
+
+### Saída dos testes 8
+![Testes 8](./prints/capture_250815_171845.png)
+
 
 ---
-
-👉 Esse README já está pronto para você colar no `README.md` do projeto.  
-Depois seguimos para criar o **workflow do GitHub Actions**.  
-
-Quer que eu já monte também o `.github/workflows/test.yml`?
-```
