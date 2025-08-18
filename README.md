@@ -1,92 +1,166 @@
-# 🔗 URL Shortener - TDD
+# 🔗 URL Shortener TDD
 
-Projeto desenvolvido com **Node.js, TypeScript, TypeORM e Jest**, seguindo o fluxo **TDD** (Test Driven Development).  
-Funcionalidades principais: encurtar URLs, autenticação de usuários, redirecionamento e métricas.
-
----
-
-## 🚀 Tecnologias
-- Node.js + Express
-- TypeScript
-- TypeORM + SQLite (ou outro DB configurável)
-- JWT (autenticação)
-- Jest + Supertest (testes automatizados)
+Encurtador de URLs com autenticação, geração de QR Code, redirecionamento seguro e dashboard de métricas, desenvolvido com **Node.js, Express, TypeORM, PostgreSQL e Jest (TDD)**.
 
 ---
 
-## 📦 Instalação
+## 📌 Funcionalidades
+- Registro/Login com **JWT**
+- Encurtamento de links com **slug único**
+- Geração de **QR Code** para cada link
+- Expiração opcional de links
+- Redirecionamento `/s/:slug`
+- Dashboard com:
+  - Total de links
+  - Total de visitas
+  - Top links por cliques
+- Proteção com middleware de autenticação
+- Testes 100% automatizados com **Jest + Supertest**
 
-Clone o repositório e instale as dependências:
+---
 
+## 🛠️ Tecnologias
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+- [TypeORM](https://typeorm.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Jest](https://jestjs.io/)
+- [Supertest](https://github.com/ladjs/supertest)
+- [QRCode](https://www.npmjs.com/package/qrcode)
+
+---
+
+## ⚙️ Instalação
+
+Clone o repositório:
 ```bash
 git clone https://github.com/seu-usuario/url-shortener-tdd.git
 cd url-shortener-tdd
+
+Instale as dependências:
+
+```bash
 npm install
 ```
 
-Configure o banco no arquivo **`src/config/data-source.ts`** (já vem com SQLite configurado para testes).
+Configure o banco no arquivo `.env`:
+
+```env
+PORT=3000
+JWT_SECRET=seu_token_secreto
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=url_shortener
+```
 
 ---
 
-## ▶️ Rodando o projeto
+## 🗄️ Banco de Dados
+
+Rodar migrações:
+
+```bash
+npm run typeorm migration:run
+```
+
+---
+
+## ▶️ Executando
+
+Rodar em desenvolvimento:
 
 ```bash
 npm run dev
 ```
 
-Servidor disponível em: **http://localhost:3000**
+Rodar em produção:
+
+```bash
+npm run build && npm start
+```
 
 ---
 
-## 🧪 Rodando os testes
+## 🧪 Testes
+
+Rodar testes unitários e de integração:
 
 ```bash
 npm test
 ```
 
-Todos os testes de autenticação, links, redirecionamento e métricas devem passar ✅  
-
-Para ver cobertura:
+Gerar relatório de cobertura:
 
 ```bash
-npm run test:coverage
+npm test -- --coverage
 ```
 
 ---
 
-## 🔐 Rotas da API
+## 📊 Cobertura Atual
 
-### **Auth**
-- `POST /auth/register` → registrar novo usuário  
-- `POST /auth/login` → autenticar e receber JWT  
-- `POST /auth/logout` → logout  
-
-### **Links**
-- `POST /links` → criar novo link (precisa JWT)  
-- `GET /links` → listar links do usuário autenticado  
-
-### **Redirecionamento**
-- `GET /s/:slug` → redireciona para a URL original  
-
-### **Métricas globais**
-- `GET /metrics/summary` → totais de links e cliques  
-- `GET /metrics/top` → top links mais acessados  
-
-### **Dashboard do usuário**
-- `GET /dashboard/summary` → métricas do usuário autenticado  
-- `GET /dashboard/top` → top links do usuário autenticado  
+| Arquivo     | Cobertura |
+| ----------- | --------- |
+| Controllers | 70%+      |
+| Entities    | 100%      |
+| Middlewares | 85%+      |
+| Routes      | 80%+      |
+| Total       | \~74%     |
 
 ---
 
-## 📖 Fluxo de Uso
-1. Registrar um usuário (`/auth/register`)  
-2. Fazer login (`/auth/login`) e obter o token JWT  
-3. Criar links (`/links`) passando o token  
-4. Acessar links encurtados em `/s/:slug`  
-5. Consultar métricas em `/metrics` ou `/dashboard`  
+## 🚀 Endpoints Principais
+
+### Auth
+
+* `POST /auth/register` → criar usuário
+* `POST /auth/login` → autenticar usuário
+* `POST /auth/logout` → logout
+
+### Links
+
+* `POST /links` → criar link
+* `GET /links` → listar links do usuário
+
+### Redirect
+
+* `GET /s/:slug` → redirecionar link encurtado
+
+### Metrics
+
+* `GET /metrics/summary` → totais
+* `GET /metrics/top` → top links por cliques
 
 ---
 
-## ✅ Status
-Todos os testes passaram (`npm test`) 🎉  
-Cobertura total implementada para controllers principais.
+## 📸 Prints
+
+(Adicionar imagens ou GIFs do fluxo: **login → criar link → acessar slug → dashboard**)
+
+---
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch: `git checkout -b minha-feature`
+3. Commit suas mudanças: `git commit -m "feat: minha feature"`
+4. Push: `git push origin minha-feature`
+5. Abra um Pull Request
+
+---
+
+## 📄 Licença
+
+MIT
+
+```
+
+---
+
+👉 Esse README já está pronto para você colar no `README.md` do projeto.  
+Depois seguimos para criar o **workflow do GitHub Actions**.  
+
+Quer que eu já monte também o `.github/workflows/test.yml`?
+```
