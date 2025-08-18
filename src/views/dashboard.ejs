@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 24px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    input { padding: 8px; border-radius: 8px; border: 1px solid #ddd; min-width: 320px; }
+    button { padding: 8px 12px; border-radius: 8px; border: 1px solid #222; background:#111; color:#fff; cursor:pointer; }
+    small { color:#666; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <div class="row">
+    <input id="token" placeholder="Cole seu JWT aqui (Authorization: Bearer ...)" />
+    <button id="save">Usar token</button>
+    <small>O token fica salvo em localStorage somente neste navegador.</small>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card"><h3>Total de links</h3><div id="total_links">—</div></div>
+    <div class="card"><h3>Ativos</h3><div id="active_links">—</div></div>
+    <div class="card"><h3>Expirados</h3><div id="expired_links">—</div></div>
+    <div class="card"><h3>Total de cliques</h3><div id="total_clicks">—</div></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Top 10 por cliques</h3>
+    <table>
+      <thead><tr><th>Slug</th><th>URL</th><th>Status</th></tr></thead>
+      <tbody id="top_body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const tokenInput = $('token');
+    const saved = localStorage.getItem('jwt');
+    if (saved) tokenInput.value = saved;
+    $('save').onclick = () => localStorage.setItem('jwt', tokenInput.value);
+
+    async function fetchJSON(url) {
+      const jwt = localStorage.getItem('jwt') || '';
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${jwt}` } });
+      if (!res.ok) throw new Error('Auth necessária ou token inválido');
+      return res.json();
+    }
+
+    async function tick() {
+      try {
+        const s = await fetchJSON('/metrics/summary');
+        $('total_links').textContent = s.total_links;
+        $('active_links').textContent = s.active_links;
+        $('expired_links').textContent = s.expired_links;
+        $('total_clicks').textContent = s.total_clicks;
+
+        const t = await fetchJSON('/metrics/top');
+        const tbody = $('top_body');
+        tbody.innerHTML = '';
+        t.top.forEach(l => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${l.slug}</td><td>${l.original_url}</td><td>${l.status}</td>`;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.warn(e.message);
+      }
+    }
+    tick();
+    setInterval(tick, 5000);
+  </script>
+</body>
+</html>

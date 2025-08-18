@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Link } from '../entities/Link';
 import { User } from '../entities/User';
-import { Visit } from '../entities/Visit';
 import QRCode from 'qrcode';
 import { nanoid } from 'nanoid';
 
@@ -64,5 +63,35 @@ export class LinkController {
     }));
 
     return res.status(200).json(formattedLinks);
+  }
+
+  static async show(req: Request, res: Response) {
+    const userId = (req as any).userId;
+    const { id } = req.params;
+
+    const link = await Link.findOne({
+      where: { id: Number(id), user: { id: userId } },
+      relations: ['visits'],
+    });
+
+    if (!link) {
+      return res.status(404).json({ error: 'Link não encontrado' });
+    }
+
+    return res.status(200).json({
+      id: link.id,
+      original_url: link.original_url,
+      slug: link.slug,
+      qr_code: link.qr_code,
+      status: link.status,
+      expires_at: link.expires_at,
+      click_count: link.click_count,
+      visits: link.visits.map(v => ({
+        id: v.id,
+        ip_hash: v.ip_hash,
+        user_agent: v.user_agent,
+        created_at: v.created_at,
+      })),
+    });
   }
 }
